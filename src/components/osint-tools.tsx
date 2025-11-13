@@ -1,24 +1,44 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock, Loader2 } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2, Users, CheckCircle, XCircle } from 'lucide-react';
 import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Badge } from './ui/badge';
+
+interface PhoneResult {
+  [key: string]: any;
+}
+
+interface InstaResult {
+  username: string;
+  full_name: string;
+  biography: string;
+  followers: number;
+  following: number;
+  posts: number;
+  profile_pic: string;
+  is_private: boolean;
+  is_verified: boolean;
+}
+
 
 export default function OsintTools() {
   // Phone OSINT state
   const [phoneInput, setPhoneInput] = useState('');
-  const [phoneResult, setPhoneResult] = useState<any>(null);
+  const [phoneResult, setPhoneResult] = useState<PhoneResult | null>(null);
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
   // Insta OSINT state
   const [instaInput, setInstaInput] = useState('');
-  const [instaResult, setInstaResult] = useState<any>(null);
+  const [instaResult, setInstaResult] = useState<InstaResult | null>(null);
   const [instaLoading, setInstaLoading] = useState(false);
   const [instaError, setInstaError] = useState<string | null>(null);
 
@@ -64,6 +84,10 @@ export default function OsintTools() {
       const response = await fetch(`/api/insta-osint?username=${username}`);
       const data = await response.json();
       if (!response.ok || data.error) {
+        // The external API might return a 200 OK but with an error message in the body
+        if (data.message) {
+            throw new Error(data.message);
+        }
         throw new Error(data.error || 'Failed to fetch data from the server.');
       }
       setInstaResult(data);
@@ -196,14 +220,47 @@ export default function OsintTools() {
                     </Alert>
                   )}
                   {instaResult && (
-                     <Card className="mt-4 bg-background/50 border-primary/20">
-                      <CardHeader>
-                        <CardTitle>Scan Results</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2 text-sm">
-                        <pre className="whitespace-pre-wrap break-words">
-                          {JSON.stringify(instaResult, null, 2)}
-                        </pre>
+                    <Card className="mt-4 bg-background/50 border-primary/20">
+                      <CardContent className="p-6">
+                        <div className="flex flex-col sm:flex-row items-center gap-6">
+                           <Avatar className="h-24 w-24 border-2 border-primary">
+                            <AvatarImage src={instaResult.profile_pic} alt={instaResult.username} />
+                            <AvatarFallback>{instaResult.username.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 space-y-1 text-center sm:text-left">
+                            <div className="flex items-center justify-center sm:justify-start gap-2">
+                              <h3 className="text-2xl font-bold font-headline">{instaResult.full_name}</h3>
+                               {instaResult.is_verified && <CheckCircle className="h-5 w-5 text-blue-500" />}
+                            </div>
+                            <p className="text-muted-foreground">@{instaResult.username}</p>
+                            <div className="flex flex-wrap justify-center sm:justify-start gap-2 pt-2">
+                                <Badge variant={instaResult.is_private ? 'destructive' : 'secondary'}>
+                                  {instaResult.is_private ? <Lock className="mr-1 h-3 w-3" /> : <UnlockKeyhole className="mr-1 h-3 w-3" />}
+                                  {instaResult.is_private ? 'Private' : 'Public'}
+                                </Badge>
+                             </div>
+                          </div>
+                        </div>
+                        <div className="mt-6 grid grid-cols-3 divide-x divide-border rounded-lg border bg-background text-center">
+                          <div className="p-3">
+                            <p className="font-bold text-lg">{instaResult.posts.toLocaleString()}</p>
+                            <p className="text-xs text-muted-foreground">Posts</p>
+                          </div>
+                           <div className="p-3">
+                            <p className="font-bold text-lg">{instaResult.followers.toLocaleString()}</p>
+                            <p className="text-xs text-muted-foreground">Followers</p>
+                          </div>
+                           <div className="p-3">
+                            <p className="font-bold text-lg">{instaResult.following.toLocaleString()}</p>
+                            <p className="text-xs text-muted-foreground">Following</p>
+                          </div>
+                        </div>
+                        {instaResult.biography && (
+                          <div className="mt-6">
+                             <h4 className="font-semibold mb-2 font-headline">Biography</h4>
+                             <p className="text-sm text-muted-foreground whitespace-pre-wrap">{instaResult.biography}</p>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   )}
