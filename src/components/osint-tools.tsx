@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, Wifi } from 'lucide-react';
+import { Phone, UserSearch } from 'lucide-react';
 
 export default function OsintTools() {
   return (
@@ -22,25 +22,21 @@ export default function OsintTools() {
           </div>
         </div>
         <div className="mx-auto mt-12 max-w-2xl">
-          <Tabs defaultValue="number-lookup" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="number-lookup">
+          <Tabs defaultValue="phone-osint" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="phone-osint">
                 <Phone className="mr-2 h-4 w-4" />
-                Number Lookup
+                Phone OSINT
               </TabsTrigger>
-              <TabsTrigger value="profile-checkup">
+              <TabsTrigger value="insta-osint">
                 <UserSearch className="mr-2 h-4 w-4" />
-                Profile Scraper
-              </TabsTrigger>
-               <TabsTrigger value="network-scanner">
-                <Wifi className="mr-2 h-4 w-4" />
-                Network Scanner
+                Insta OSINT
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="number-lookup">
+            <TabsContent value="phone-osint">
               <Card className="border-primary/20">
                 <CardHeader>
-                  <CardTitle>Number Lookup</CardTitle>
+                  <CardTitle>Phone Number OSINT</CardTitle>
                   <CardDescription>
                     Enter a phone number to gather available information from public records.
                   </CardDescription>
@@ -53,35 +49,19 @@ export default function OsintTools() {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="profile-checkup">
+            <TabsContent value="insta-osint">
               <Card className="border-primary/20">
                 <CardHeader>
-                  <CardTitle>Profile Scraper</CardTitle>
+                  <CardTitle>Instagram Profile Scraper</CardTitle>
                   <CardDescription>
-                    Enter a social media username or profile URL to aggregate public data.
+                    Enter an Instagram username to aggregate public data.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="space-y-1">
-                    <Input id="profile" placeholder="e.g., @username or full URL" className="bg-background"/>
+                    <Input id="profile" placeholder="e.g., @username" className="bg-background"/>
                   </div>
                   <Button>Scrape Data</Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="network-scanner">
-              <Card className="border-primary/20">
-                <CardHeader>
-                  <CardTitle>Network Scanner</CardTitle>
-                  <CardDescription>
-                    Enter an IP address or domain to scan for open ports and vulnerabilities.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Input id="network-target" placeholder="e.g., 192.168.1.1 or example.com" className="bg-background"/>
-                  </div>
-                  <Button>Begin Port Scan</Button>
                 </CardContent>
               </Card>
             </TabsContent>
