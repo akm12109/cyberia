@@ -20,10 +20,17 @@ export default function OsintTools() {
     setPhoneError(null);
     setPhoneResult(null);
 
+    // Basic validation for 10-digit number
+    if (!/^\d{10}$/.test(phoneInput)) {
+      setPhoneError('Please enter a valid 10-digit phone number.');
+      setPhoneLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(`https://innocent-lost.vercel.app/api/nex?number=${phoneInput}`);
+      const response = await fetch(`/api/phone-osint?number=${phoneInput}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch data. The service might be down.');
+        throw new Error('Failed to fetch data from the server.');
       }
       const data = await response.json();
       if (data.error) {
@@ -82,17 +89,18 @@ export default function OsintTools() {
                 <CardHeader>
                   <CardTitle>Phone Number OSINT</CardTitle>
                   <CardDescription>
-                    Enter a phone number to gather available information from public records.
+                    Enter a 10-digit phone number to gather available information from public records.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-2">
                     <Input 
                       id="phone" 
-                      placeholder="e.g., 91xxxxxxxxxx" 
+                      placeholder="e.g., 9876543210" 
                       className="bg-background"
                       value={phoneInput}
                       onChange={(e) => setPhoneInput(e.target.value)}
+                      maxLength={10}
                     />
                     <Button onClick={handlePhoneScan} disabled={phoneLoading}>
                       {phoneLoading ? (
@@ -115,12 +123,9 @@ export default function OsintTools() {
                         <CardTitle>Scan Results</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-2 text-sm">
-                        {Object.entries(phoneResult).map(([key, value]) => (
-                          <div key={key} className="grid grid-cols-2 gap-2">
-                            <span className="font-semibold capitalize text-muted-foreground">{key.replace(/_/g, ' ')}:</span>
-                            <span>{String(value)}</span>
-                          </div>
-                        ))}
+                        <pre className="whitespace-pre-wrap break-words">
+                          {JSON.stringify(phoneResult, null, 2)}
+                        </pre>
                       </CardContent>
                     </Card>
                   )}
