@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock } from 'lucide-react';
+import CipherTool from './cipher-tool';
 
 export default function OsintTools() {
   return (
@@ -23,7 +24,7 @@ export default function OsintTools() {
         </div>
         <div className="mx-auto mt-12 max-w-2xl">
           <Tabs defaultValue="phone-osint" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="phone-osint">
                 <Phone className="mr-2 h-4 w-4" />
                 Phone OSINT
@@ -39,6 +40,10 @@ export default function OsintTools() {
               <TabsTrigger value="truecaller-osint">
                 <Phone className="mr-2 h-4 w-4" />
                 Truecaller OSINT
+              </TabsTrigger>
+              <TabsTrigger value="cipher">
+                <Lock className="mr-2 h-4 w-4" />
+                Cipher
               </TabsTrigger>
             </TabsList>
             <TabsContent value="phone-osint">
@@ -104,6 +109,9 @@ export default function OsintTools() {
                   <Button>Search Truecaller</Button>
                 </CardContent>
               </Card>
+            </TabsContent>
+            <TabsContent value="cipher">
+              <CipherTool />
             </TabsContent>
           </Tabs>
         </div>
