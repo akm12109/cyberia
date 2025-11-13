@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "A beautiful shot of the school campus under a clear blue sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1591123120675-6f7f1aae0e5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzY2hvb2wlMjBjYW1wdXN8ZW58MHx8fHwxNzYyOTU1ODQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "school campus"
+    },
+    {
+      "id": "annual-sports-day",
+      "description": "Students participating in a race during the annual sports day.",
+      "imageUrl": "https://images.unsplash.com/photo-1746155885492-d62fc6e562dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdHVkZW50cyUyMHJ1bm5pbmd8ZW58MHx8fHwxNzYyOTU1ODQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "students running"
+    },
+    {
+      "id": "science-exhibition",
+      "description": "A student presenting a project at the school's science exhibition.",
+      "imageUrl": "https://images.unsplash.com/photo-1759456629068-205f242feccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdHVkZW50JTIwcHJlc2VudGF0aW9ufGVufDB8fHx8MTc2MzAzMzM2NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "student presentation"
+    },
+    {
+      "id": "library-books",
+      "description": "A quiet and well-stocked school library.",
+      "imageUrl": "https://images.unsplash.com/photo-1485322551133-3a4c27a9d925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c2Nob29sJTIwbGlicmFyeXxlbnwwfHx8fDE3NjI5ODk3MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "school library"
+    },
+    {
+      "id": "school-building",
+      "description": "Front view of the Sulekha Devi Mission School building.",
+      "imageUrl": "https://images.unsplash.com/photo-1613896527026-f195d5c818ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2hvb2wlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjI5MjcwNjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "school building"
+    }
+  ]
 }
