@@ -39,6 +39,10 @@ export async function GET(request: NextRequest) {
 
     const data = await apiResponse.json();
 
+    // Remove the credit and developer fields
+    delete data.credit;
+    delete data.developer;
+
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
