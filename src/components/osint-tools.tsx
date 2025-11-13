@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock, Loader2, Users, CheckCircle, XCircle, UnlockKeyhole } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2, CheckCircle, UnlockKeyhole, Heart, MessageCircle } from 'lucide-react';
 import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -28,6 +28,24 @@ interface InstaResult {
   is_verified: boolean;
 }
 
+interface Post {
+  id: string;
+  shortcode: string;
+  caption: string;
+  likes: number;
+  comments: number;
+  image_url: string;
+  thumbnail_url: string;
+  is_video: boolean;
+  timestamp: number;
+  url: string;
+}
+
+interface InstaPostsResult {
+    username: string;
+    posts: Post[];
+}
+
 
 export default function OsintTools() {
   // Phone OSINT state
@@ -39,6 +57,7 @@ export default function OsintTools() {
   // Insta OSINT state
   const [instaInput, setInstaInput] = useState('');
   const [instaResult, setInstaResult] = useState<InstaResult | null>(null);
+  const [instaPostsResult, setInstaPostsResult] = useState<InstaPostsResult | null>(null);
   const [instaLoading, setInstaLoading] = useState(false);
   const [instaError, setInstaError] = useState<string | null>(null);
 
@@ -71,6 +90,7 @@ export default function OsintTools() {
     setInstaLoading(true);
     setInstaError(null);
     setInstaResult(null);
+    setInstaPostsResult(null);
     
     const username = instaInput.startsWith('@') ? instaInput.substring(1) : instaInput;
 
@@ -81,16 +101,24 @@ export default function OsintTools() {
     }
 
     try {
-      const response = await fetch(`/api/insta-osint?username=${username}`);
-      const data = await response.json();
-      if (!response.ok || data.error) {
-        // The external API might return a 200 OK but with an error message in the body
-        if (data.message) {
-            throw new Error(data.message);
-        }
-        throw new Error(data.error || 'Failed to fetch data from the server.');
+      // Fetch profile data
+      const profileResponse = await fetch(`/api/insta-osint?username=${username}`);
+      const profileData = await profileResponse.json();
+      if (!profileResponse.ok || profileData.error) {
+        throw new Error(profileData.error || 'Failed to fetch profile data.');
       }
-      setInstaResult(data);
+      setInstaResult(profileData);
+
+      // Fetch posts data
+      const postsResponse = await fetch(`/api/insta-posts?username=${username}`);
+      const postsData = await postsResponse.json();
+      if (!postsResponse.ok || postsData.error) {
+        // Don't throw an error, just log it, as posts might not be available
+        console.error(postsData.error || 'Failed to fetch posts data.');
+      } else {
+        setInstaPostsResult(postsData);
+      }
+
     } catch (error: any) {
       setInstaError(error.message || 'An unexpected error occurred.');
     } finally {
@@ -115,7 +143,7 @@ export default function OsintTools() {
             </p>
           </div>
         </div>
-        <div className="mx-auto mt-12 max-w-2xl">
+        <div className="mx-auto mt-12 max-w-4xl">
           <Tabs defaultValue="phone-osint" className="w-full">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="phone-osint">
@@ -220,49 +248,89 @@ export default function OsintTools() {
                     </Alert>
                   )}
                   {instaResult && (
-                    <Card className="mt-4 bg-background/50 border-primary/20">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col sm:flex-row items-center gap-6">
-                           <Avatar className="h-24 w-24 border-2 border-primary">
-                            <AvatarImage src={instaResult.profile_pic} alt={instaResult.username} />
-                            <AvatarFallback>{instaResult.username.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 space-y-1 text-center sm:text-left">
-                            <div className="flex items-center justify-center sm:justify-start gap-2">
-                              <h3 className="text-2xl font-bold font-headline">{instaResult.full_name}</h3>
-                               {instaResult.is_verified && <CheckCircle className="h-5 w-5 text-blue-500" />}
+                    <div className="space-y-6">
+                      <Card className="mt-4 bg-background/50 border-primary/20">
+                        <CardContent className="p-6">
+                          <div className="flex flex-col sm:flex-row items-center gap-6">
+                            <Avatar className="h-24 w-24 border-2 border-primary">
+                              <AvatarImage src={instaResult.profile_pic} alt={instaResult.username} />
+                              <AvatarFallback>{instaResult.username.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 space-y-1 text-center sm:text-left">
+                              <div className="flex items-center justify-center sm:justify-start gap-2">
+                                <h3 className="text-2xl font-bold font-headline">{instaResult.full_name}</h3>
+                                {instaResult.is_verified && <CheckCircle className="h-5 w-5 text-blue-500" />}
+                              </div>
+                              <p className="text-muted-foreground">@{instaResult.username}</p>
+                              <div className="flex flex-wrap justify-center sm:justify-start gap-2 pt-2">
+                                  <Badge variant={instaResult.is_private ? 'destructive' : 'secondary'}>
+                                    {instaResult.is_private ? <Lock className="mr-1 h-3 w-3" /> : <UnlockKeyhole className="mr-1 h-3 w-3" />}
+                                    {instaResult.is_private ? 'Private' : 'Public'}
+                                  </Badge>
+                              </div>
                             </div>
-                            <p className="text-muted-foreground">@{instaResult.username}</p>
-                            <div className="flex flex-wrap justify-center sm:justify-start gap-2 pt-2">
-                                <Badge variant={instaResult.is_private ? 'destructive' : 'secondary'}>
-                                  {instaResult.is_private ? <Lock className="mr-1 h-3 w-3" /> : <UnlockKeyhole className="mr-1 h-3 w-3" />}
-                                  {instaResult.is_private ? 'Private' : 'Public'}
-                                </Badge>
-                             </div>
+                          </div>
+                          <div className="mt-6 grid grid-cols-3 divide-x divide-border rounded-lg border bg-background text-center">
+                            <div className="p-3">
+                              <p className="font-bold text-lg">{instaResult.posts.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">Posts</p>
+                            </div>
+                            <div className="p-3">
+                              <p className="font-bold text-lg">{instaResult.followers.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">Followers</p>
+                            </div>
+                            <div className="p-3">
+                              <p className="font-bold text-lg">{instaResult.following.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">Following</p>
+                            </div>
+                          </div>
+                          {instaResult.biography && (
+                            <div className="mt-6">
+                                <h4 className="font-semibold mb-2 font-headline">Biography</h4>
+                                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{instaResult.biography}</p>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                      
+                      {instaPostsResult && instaPostsResult.posts.length > 0 && (
+                        <div>
+                          <h4 className="font-headline text-2xl font-bold mb-4 text-center">Recent Posts</h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {instaPostsResult.posts.map(post => (
+                              <Card key={post.id} className="overflow-hidden bg-background/50 border-primary/20">
+                                <a href={post.url} target="_blank" rel="noopener noreferrer">
+                                  <div className="aspect-square relative">
+                                    <Image
+                                      src={post.thumbnail_url}
+                                      alt={post.caption.substring(0, 50)}
+                                      fill
+                                      className="object-cover"
+                                    />
+                                    {post.is_video && <div className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>}
+                                  </div>
+                                </a>
+                                {post.caption && (
+                                   <CardContent className="p-4">
+                                    <p className="text-sm text-muted-foreground truncate">{post.caption}</p>
+                                  </CardContent>
+                                )}
+                                <CardFooter className="p-4 pt-0 flex justify-end gap-4 text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Heart className="h-4 w-4" />
+                                    <span className="text-sm">{post.likes.toLocaleString()}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MessageCircle className="h-4 w-4" />
+                                     <span className="text-sm">{post.comments.toLocaleString()}</span>
+                                  </div>
+                                </CardFooter>
+                              </Card>
+                            ))}
                           </div>
                         </div>
-                        <div className="mt-6 grid grid-cols-3 divide-x divide-border rounded-lg border bg-background text-center">
-                          <div className="p-3">
-                            <p className="font-bold text-lg">{instaResult.posts.toLocaleString()}</p>
-                            <p className="text-xs text-muted-foreground">Posts</p>
-                          </div>
-                           <div className="p-3">
-                            <p className="font-bold text-lg">{instaResult.followers.toLocaleString()}</p>
-                            <p className="text-xs text-muted-foreground">Followers</p>
-                          </div>
-                           <div className="p-3">
-                            <p className="font-bold text-lg">{instaResult.following.toLocaleString()}</p>
-                            <p className="text-xs text-muted-foreground">Following</p>
-                          </div>
-                        </div>
-                        {instaResult.biography && (
-                          <div className="mt-6">
-                             <h4 className="font-semibold mb-2 font-headline">Biography</h4>
-                             <p className="text-sm text-muted-foreground whitespace-pre-wrap">{instaResult.biography}</p>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
+                      )}
+                    </div>
                   )}
                 </CardContent>
               </Card>

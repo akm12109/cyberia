@@ -16,7 +16,6 @@ async function imageToDataUri(url: string): Promise<string | undefined> {
     }
 }
 
-
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const username = searchParams.get('username');
@@ -31,30 +30,32 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const apiResponse = await fetch(`https://anmolinstainfo.worldgreeker.workers.dev/user?username=${username}`);
+    const apiResponse = await fetch(`https://anmolinstainfo.worldgreeker.workers.dev/posts?username=${username}`);
     
     if (!apiResponse.ok) {
-       const errorData = await apiResponse.json().catch(() => ({ error: 'The external service returned an invalid response.' }));
-       if (errorData.message) {
-         return new Response(JSON.stringify({ error: errorData.message }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-       }
-      return new Response(JSON.stringify({ error: errorData.error || 'The external service failed to process the request.' }), {
-        status: apiResponse.status,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+       const errorData = await apiResponse.json().catch(() => ({ error: 'The external posts service returned an invalid response.' }));
+        return new Response(JSON.stringify({ error: errorData.message || errorData.error || 'The external posts service failed.' }), {
+            status: apiResponse.status,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
 
     const data = await apiResponse.json();
 
-    if (data.profile_pic) {
-        const dataUri = await imageToDataUri(data.profile_pic);
-        if (dataUri) {
-            data.profile_pic = dataUri;
-        }
+    if (data.posts && Array.isArray(data.posts)) {
+        const processedPosts = await Promise.all(data.posts.map(async (post: any) => {
+            if (post.thumbnail_url) {
+                const dataUri = await imageToDataUri(post.thumbnail_url);
+                if (dataUri) {
+                    post.thumbnail_url = dataUri;
+                }
+            }
+            // The main image_url can be very large, so we only convert the thumbnail
+            // and leave the main one as a direct link for now.
+            return post;
+        }));
+        data.posts = processedPosts;
     }
-
 
     return new Response(JSON.stringify(data), {
       status: 200,
@@ -63,8 +64,8 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Proxy API error:', error);
-    return new Response(JSON.stringify({ error: 'An internal server error occurred.' }), {
+    console.error('Proxy API error for posts:', error);
+    return new Response(JSON.stringify({ error: 'An internal server error occurred while fetching posts.' }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
