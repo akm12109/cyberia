@@ -6,13 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock, Loader2, CheckCircle, UnlockKeyhole, Heart, MessageCircle } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2, CheckCircle, UnlockKeyhole, Heart, MessageCircle, User, Map, Home, CircleUser, Wifi } from 'lucide-react';
 import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 
+interface PhoneResultData {
+  mobile: string;
+  name: string;
+  fname: string;
+  address: string;
+  circle: string;
+  id: string;
+}
+
 interface PhoneResult {
+  data: PhoneResultData[];
   [key: string]: any;
 }
 
@@ -200,17 +210,61 @@ export default function OsintTools() {
                       <AlertDescription>{phoneError}</AlertDescription>
                     </Alert>
                   )}
-                  {phoneResult && (
-                     <Card className="mt-4 bg-background/50 border-primary/20">
-                      <CardHeader>
-                        <CardTitle>Scan Results</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2 text-sm">
-                        <pre className="whitespace-pre-wrap break-words">
-                          {JSON.stringify(phoneResult, null, 2)}
-                        </pre>
-                      </CardContent>
-                    </Card>
+                  {phoneResult && phoneResult.data && (
+                     <div className="space-y-4">
+                      <h3 className="text-xl font-bold font-headline mt-4">Scan Results</h3>
+                        {phoneResult.data.map((record, index) => (
+                           <Card key={record.id || index} className="bg-background/50 border-primary/20">
+                            <CardContent className="p-4 space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                    <User className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Name</p>
+                                    <p className="font-semibold">{record.name}</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <CircleUser className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Father's Name</p>
+                                    <p className="font-semibold">{record.fname}</p>
+                                  </div>
+                                </div>
+                                 <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <Home className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Address</p>
+                                    <p className="font-semibold">{record.address.replace(/!/g, ', ')}</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <Wifi className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Telecom Circle</p>
+                                    <p className="font-semibold">{record.circle}</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <Phone className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Mobile</p>
+                                    <p className="font-semibold">{record.mobile}</p>
+                                  </div>
+                                </div>
+                            </CardContent>
+                           </Card>
+                        ))}
+                     </div>
                   )}
                 </CardContent>
               </Card>
