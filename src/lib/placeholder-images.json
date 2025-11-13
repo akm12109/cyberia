@@ -2,33 +2,33 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A beautiful shot of the school campus under a clear blue sky.",
-      "imageUrl": "https://images.unsplash.com/photo-1591123120675-6f7f1aae0e5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzY2hvb2wlMjBjYW1wdXN8ZW58MHx8fHwxNzYyOTU1ODQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school campus"
+      "description": "A dark, abstract digital background with glowing green binary code.",
+      "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjeWJlcnNlY3VyaXR5fGVufDB8fHx8MTc2MzA0Mjc1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cybersecurity matrix"
     },
     {
-      "id": "annual-sports-day",
-      "description": "Students participating in a race during the annual sports day.",
-      "imageUrl": "https://images.unsplash.com/photo-1746155885492-d62fc6e562dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdHVkZW50cyUyMHJ1bm5pbmd8ZW58MHx8fHwxNzYyOTU1ODQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "students running"
+      "id": "zero-day-exploit",
+      "description": "A computer screen showing complex code with a red warning symbol.",
+      "imageUrl": "https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxleHBsb2l0JTIwY29kZXxlbnwwfHx8fDE3NjMwNDI4MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "exploit code"
     },
     {
-      "id": "science-exhibition",
-      "description": "A student presenting a project at the school's science exhibition.",
-      "imageUrl": "https://images.unsplash.com/photo-1759456629068-205f242feccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdHVkZW50JTIwcHJlc2VudGF0aW9ufGVufDB8fHx8MTc2MzAzMzM2NHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "student presentation"
+      "id": "data-breach",
+      "description": "A visual representation of a data breach with scattered data fragments.",
+      "imageUrl": "https://images.unsplash.com/photo-1614064548237-02f0d1a2c544?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkYXRhJTIwYnJlYWNofGVufDB8fHx8MTc2MzA0MjgyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data breach"
     },
     {
-      "id": "library-books",
-      "description": "A quiet and well-stocked school library.",
-      "imageUrl": "https://images.unsplash.com/photo-1485322551133-3a4c27a9d925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c2Nob29sJTIwbGlicmFyeXxlbnwwfHx8fDE3NjI5ODk3MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school library"
+      "id": "darknet-market",
+      "description": "A shadowy figure in a hoodie looking at a laptop screen in a dark room.",
+      "imageUrl": "https://images.unsplash.com/photo-1551299932-0945ddb9a302?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWNrZXIlMjBob29kaWV8ZW58MHx8fHwxNzYzMDQyODIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hacker hoodie"
     },
     {
-      "id": "school-building",
-      "description": "Front view of the Sulekha Devi Mission School building.",
-      "imageUrl": "https://images.unsplash.com/photo-1613896527026-f195d5c818ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2hvb2wlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjI5MjcwNjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school building"
+      "id": "mission-image",
+      "description": "A motherboard with glowing circuits.",
+      "imageUrl": "https://images.unsplash.com/photo-1526402924289-9335a414995f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3RoZXJib2FyZCUyMGdsb3d8ZW58MHx8fHwxNzYzMDQyODIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "glowing motherboard"
     }
   ]
 }

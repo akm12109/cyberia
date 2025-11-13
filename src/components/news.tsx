@@ -6,42 +6,41 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 const newsItems = [
   {
     id: 1,
-    title: 'Annual Sports Day Highlights',
+    title: 'Zero-Day Exploit Rocks FinCorp',
     date: 'October 26, 2023',
-    category: 'Event',
-    imageId: 'annual-sports-day',
+    category: 'Exploit',
+    imageId: 'zero-day-exploit',
   },
   {
     id: 2,
-    title: 'Science Exhibition Winners Announced',
+    title: 'Data Breach Leaks 10M User Records',
     date: 'October 22, 2023',
-    category: 'Academics',
-    imageId: 'science-exhibition',
+    category: 'Breach',
+    imageId: 'data-breach',
   },
   {
     id: 3,
-    title: 'New Books Arrive at the School Library',
+    title: 'Darknet Market Takedown Analysis',
     date: 'October 18, 2023',
-    category: 'Announcement',
-    imageId: 'library-books',
+    category: 'Intel',
+    imageId: 'darknet-market',
   },
 ];
 
 export default function News() {
   return (
-    <section id="news" className="w-full py-16 md:py-24 lg:py-32">
+    <section id="news" className="w-full bg-background py-16 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-              News & Announcements
+            <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-headline text-primary">
+              Threat Feed
             </div>
             <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-5xl">
-              Stay Updated
+              Latest Intelligence
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              The latest news, events, and announcements from Sulekha Devi
-              Mission School.
+              Stay ahead of the curve with real-time updates on vulnerabilities, breaches, and major cyber events.
             </p>
           </div>
         </div>
@@ -53,7 +52,7 @@ export default function News() {
             return (
               <Card
                 key={item.id}
-                className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="overflow-hidden border-primary/20 bg-secondary transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1"
               >
                 {image && (
                   <CardHeader className="p-0">
@@ -62,13 +61,13 @@ export default function News() {
                       alt={image.description}
                       width={600}
                       height={400}
-                      className="h-48 w-full object-cover"
+                      className="h-48 w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"
                       data-ai-hint={image.imageHint}
                     />
                   </CardHeader>
                 )}
                 <CardContent className="p-6">
-                  <Badge variant="secondary" className="mb-2">
+                  <Badge variant="destructive" className="mb-2 bg-primary text-primary-foreground">
                     {item.category}
                   </Badge>
                   <CardTitle className="font-headline text-xl">

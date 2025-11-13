@@ -18,11 +18,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from './ui/card';
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
+  handle: z.string().min(2, {
+    message: 'Handle must be at least 2 characters.',
   }),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
+  secureChannel: z.string().email({
+    message: 'Please enter a valid secure channel (e.g., encrypted email).',
   }),
   subject: z.string().min(5, {
     message: 'Subject must be at least 5 characters.',
@@ -38,8 +38,8 @@ export default function ContactForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
+      handle: '',
+      secureChannel: '',
       subject: '',
       message: '',
     },
@@ -48,26 +48,28 @@ export default function ContactForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     toast({
-      title: 'Message Sent!',
-      description: "Thank you for contacting us. We'll be in touch soon.",
+      title: 'Transmission Sent',
+      description: 'Your encrypted message has been dispatched into the void. Await a response... or don\'t.',
+      variant: 'default',
+      className: 'bg-primary text-primary-foreground',
     });
     form.reset();
   }
 
   return (
-    <Card>
+    <Card className="border-primary/20">
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="handle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Handle</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} />
+                      <Input placeholder="Your Alias" {...field} className="bg-secondary/50"/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -75,12 +77,12 @@ export default function ContactForm() {
               />
               <FormField
                 control={form.control}
-                name="email"
+                name="secureChannel"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Secure Channel</FormLabel>
                     <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} />
+                      <Input placeholder="Encrypted Email / PGP Key" {...field} className="bg-secondary/50"/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -94,7 +96,7 @@ export default function ContactForm() {
                 <FormItem>
                   <FormLabel>Subject</FormLabel>
                   <FormControl>
-                    <Input placeholder="Inquiry about admissions" {...field} />
+                    <Input placeholder="Operation Alpha" {...field} className="bg-secondary/50"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,11 +107,11 @@ export default function ContactForm() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
+                  <FormLabel>Encrypted Message</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell us how we can help"
-                      className="min-h-[120px]"
+                      placeholder="Your PGP encrypted message..."
+                      className="min-h-[120px] bg-secondary/50"
                       {...field}
                     />
                   </FormControl>
@@ -118,7 +120,7 @@ export default function ContactForm() {
               )}
             />
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? 'Sending...' : 'Send Message'}
+              {form.formState.isSubmitting ? 'Transmitting...' : 'Transmit Message'}
             </Button>
           </form>
         </Form>

@@ -37,7 +37,7 @@ export async function generateImageAction(
   }
 
   const input: GenerateInspirationalImagesInput = {
-    schoolName: 'Sulekha Devi Mission School',
+    schoolName: 'Cyberia',
     imageSubject: validatedFields.data.imageSubject,
   };
 

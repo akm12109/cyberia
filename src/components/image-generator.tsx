@@ -14,7 +14,7 @@ const initialState: ImageGeneratorState = {};
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={pending} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...
@@ -37,9 +37,9 @@ export default function ImageGenerator() {
         <div className="flex-grow">
           <Input
             name="imageSubject"
-            placeholder="e.g., students in a library"
+            placeholder="e.g., corporate espionage"
             aria-label="Image Subject"
-            className="bg-background"
+            className="bg-secondary/50 focus:bg-secondary"
           />
           {state?.errors?.imageSubject && (
             <p className="mt-1 text-sm text-destructive">
@@ -55,11 +55,11 @@ export default function ImageGenerator() {
         </Alert>
       )}
       {state?.imageUrl && (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden border-primary/30">
           <CardContent className="p-0">
             <Image
               src={state.imageUrl}
-              alt="Generated inspirational image"
+              alt="Generated propaganda image"
               width={600}
               height={400}
               className="h-auto w-full object-cover"

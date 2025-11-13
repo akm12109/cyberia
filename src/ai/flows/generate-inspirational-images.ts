@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates inspirational images of the school using generative AI for the 'About Us' page.
@@ -11,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateInspirationalImagesInputSchema = z.object({
-  schoolName: z.string().describe('The name of the school.'),
+  schoolName: z.string().describe('The name of the organization.'),
   imageSubject: z.string().describe('The subject of the image to generate.'),
 });
 export type GenerateInspirationalImagesInput = z.infer<typeof GenerateInspirationalImagesInputSchema>;
@@ -29,7 +30,7 @@ const prompt = ai.definePrompt({
   name: 'generateInspirationalImagesPrompt',
   input: {schema: GenerateInspirationalImagesInputSchema},
   output: {schema: GenerateInspirationalImagesOutputSchema},
-  prompt: `Generate an inspirational and visually appealing image of {{imageSubject}} at {{schoolName}} for the school\'s \'About Us\' page. The image should reflect the school\'s values of trust, intelligence, and open communication.`,
+  prompt: `Generate a dark, cyberpunk, hacker-themed image about {{imageSubject}}. The organization is called {{schoolName}}. The image should evoke themes of digital espionage, information warfare, and counter-culture.`,
 });
 
 const generateInspirationalImagesFlow = ai.defineFlow(
