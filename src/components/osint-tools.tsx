@@ -19,6 +19,8 @@ interface PhoneResultData {
   address: string;
   circle: string;
   id: string;
+  alt?: string;
+  email?: string;
 }
 
 interface PhoneResult {
@@ -126,6 +128,10 @@ export default function OsintTools() {
       const data = await response.json();
       if (!response.ok || data.error) {
         throw new Error(data.error || 'Failed to fetch data from the server.');
+      }
+       if (data.data && Array.isArray(data.data)) {
+        const uniqueData = Array.from(new Set(data.data.map((item: PhoneResultData) => JSON.stringify(item)))).map(item => JSON.parse(item as string));
+        data.data = uniqueData;
       }
       setPhoneResult(data);
     } catch (error: any) {
@@ -329,6 +335,28 @@ export default function OsintTools() {
                                     <p className="font-semibold">{record.mobile}</p>
                                   </div>
                                 </div>
+                                {record.alt && (
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <Phone className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Alternate Number</p>
+                                    <p className="font-semibold">{record.alt}</p>
+                                  </div>
+                                </div>
+                                )}
+                                {record.email && (
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-primary/10 p-2 rounded-full">
+                                      <Mail className="h-5 w-5 text-primary"/>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Email</p>
+                                    <p className="font-semibold">{record.email}</p>
+                                  </div>
+                                </div>
+                                )}
                             </CardContent>
                            </Card>
                         ))}
@@ -564,3 +592,5 @@ export default function OsintTools() {
     </section>
   );
 }
+
+    
