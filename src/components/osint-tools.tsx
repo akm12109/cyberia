@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock, Loader2, Users, CheckCircle, XCircle } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2, Users, CheckCircle, XCircle, UnlockKeyhole } from 'lucide-react';
 import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
