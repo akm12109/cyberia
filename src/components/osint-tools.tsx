@@ -10,17 +10,23 @@ import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export default function OsintTools() {
+  // Phone OSINT state
   const [phoneInput, setPhoneInput] = useState('');
   const [phoneResult, setPhoneResult] = useState<any>(null);
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  // Insta OSINT state
+  const [instaInput, setInstaInput] = useState('');
+  const [instaResult, setInstaResult] = useState<any>(null);
+  const [instaLoading, setInstaLoading] = useState(false);
+  const [instaError, setInstaError] = useState<string | null>(null);
 
   const handlePhoneScan = async () => {
     setPhoneLoading(true);
     setPhoneError(null);
     setPhoneResult(null);
 
-    // Basic validation for 10-digit number
     if (!/^\d{10}$/.test(phoneInput)) {
       setPhoneError('Please enter a valid 10-digit phone number.');
       setPhoneLoading(false);
@@ -29,12 +35,9 @@ export default function OsintTools() {
 
     try {
       const response = await fetch(`/api/phone-osint?number=${phoneInput}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data from the server.');
-      }
       const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
+      if (!response.ok || data.error) {
+        throw new Error(data.error || 'Failed to fetch data from the server.');
       }
       setPhoneResult(data);
     } catch (error: any) {
@@ -43,6 +46,34 @@ export default function OsintTools() {
       setPhoneLoading(false);
     }
   };
+
+  const handleInstaScan = async () => {
+    setInstaLoading(true);
+    setInstaError(null);
+    setInstaResult(null);
+    
+    const username = instaInput.startsWith('@') ? instaInput.substring(1) : instaInput;
+
+    if (!username) {
+      setInstaError('Please enter an Instagram username.');
+      setInstaLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/insta-osint?username=${username}`);
+      const data = await response.json();
+      if (!response.ok || data.error) {
+        throw new Error(data.error || 'Failed to fetch data from the server.');
+      }
+      setInstaResult(data);
+    } catch (error: any) {
+      setInstaError(error.message || 'An unexpected error occurred.');
+    } finally {
+      setInstaLoading(false);
+    }
+  };
+
 
   return (
     <section id="osint" className="w-full bg-secondary py-16 md:py-24 lg:py-32">
@@ -140,11 +171,42 @@ export default function OsintTools() {
                     Enter an Instagram username to aggregate public data.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Input id="profile" placeholder="e.g., @username" className="bg-background"/>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      id="insta-profile" 
+                      placeholder="username (without @)" 
+                      className="bg-background"
+                      value={instaInput}
+                      onChange={(e) => setInstaInput(e.target.value)}
+                    />
+                     <Button onClick={handleInstaScan} disabled={instaLoading}>
+                      {instaLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <UserSearch className="mr-2 h-4 w-4" />
+                      )}
+                      Scrape Data
+                    </Button>
                   </div>
-                  <Button>Scrape Data</Button>
+                  {instaError && (
+                    <Alert variant="destructive">
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>{instaError}</AlertDescription>
+                    </Alert>
+                  )}
+                  {instaResult && (
+                     <Card className="mt-4 bg-background/50 border-primary/20">
+                      <CardHeader>
+                        <CardTitle>Scan Results</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2 text-sm">
+                        <pre className="whitespace-pre-wrap break-words">
+                          {JSON.stringify(instaResult, null, 2)}
+                        </pre>
+                      </CardContent>
+                    </Card>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
