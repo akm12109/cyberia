@@ -1,11 +1,42 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2 } from 'lucide-react';
 import CipherTool from './cipher-tool';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export default function OsintTools() {
+  const [phoneInput, setPhoneInput] = useState('');
+  const [phoneResult, setPhoneResult] = useState<any>(null);
+  const [phoneLoading, setPhoneLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  const handlePhoneScan = async () => {
+    setPhoneLoading(true);
+    setPhoneError(null);
+    setPhoneResult(null);
+
+    try {
+      const response = await fetch(`https://innocent-lost.vercel.app/api/nex?number=${phoneInput}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data. The service might be down.');
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setPhoneResult(data);
+    } catch (error: any) {
+      setPhoneError(error.message || 'An unexpected error occurred.');
+    } finally {
+      setPhoneLoading(false);
+    }
+  };
+
   return (
     <section id="osint" className="w-full bg-secondary py-16 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -54,11 +85,45 @@ export default function OsintTools() {
                     Enter a phone number to gather available information from public records.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Input id="phone" placeholder="e.g., +15551234567" className="bg-background"/>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      id="phone" 
+                      placeholder="e.g., 91xxxxxxxxxx" 
+                      className="bg-background"
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                    />
+                    <Button onClick={handlePhoneScan} disabled={phoneLoading}>
+                      {phoneLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Phone className="mr-2 h-4 w-4" />
+                      )}
+                      Initiate Scan
+                    </Button>
                   </div>
-                  <Button>Initiate Scan</Button>
+                  {phoneError && (
+                    <Alert variant="destructive">
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>{phoneError}</AlertDescription>
+                    </Alert>
+                  )}
+                  {phoneResult && (
+                     <Card className="mt-4 bg-background/50 border-primary/20">
+                      <CardHeader>
+                        <CardTitle>Scan Results</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2 text-sm">
+                        {Object.entries(phoneResult).map(([key, value]) => (
+                          <div key={key} className="grid grid-cols-2 gap-2">
+                            <span className="font-semibold capitalize text-muted-foreground">{key.replace(/_/g, ' ')}:</span>
+                            <span>{String(value)}</span>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
