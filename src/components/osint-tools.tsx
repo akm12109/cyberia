@@ -23,7 +23,7 @@ export default function OsintTools() {
         </div>
         <div className="mx-auto mt-12 max-w-2xl">
           <Tabs defaultValue="phone-osint" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="phone-osint">
                 <Phone className="mr-2 h-4 w-4" />
                 Phone OSINT
@@ -35,6 +35,10 @@ export default function OsintTools() {
               <TabsTrigger value="postal-osint">
                 <MapPin className="mr-2 h-4 w-4" />
                 Postal OSINT
+              </TabsTrigger>
+              <TabsTrigger value="truecaller-osint">
+                <Phone className="mr-2 h-4 w-4" />
+                Truecaller OSINT
               </TabsTrigger>
             </TabsList>
             <TabsContent value="phone-osint">
@@ -82,6 +86,22 @@ export default function OsintTools() {
                     <Input id="postal" placeholder="e.g., 90210" className="bg-background"/>
                   </div>
                   <Button>Geolocate</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="truecaller-osint">
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle>Truecaller OSINT</CardTitle>
+                  <CardDescription>
+                    Enter a phone number to search the Truecaller database.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Input id="truecaller-phone" placeholder="e.g., +15551234567" className="bg-background"/>
+                  </div>
+                  <Button>Search Truecaller</Button>
                 </CardContent>
               </Card>
             </TabsContent>
