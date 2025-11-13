@@ -96,6 +96,7 @@ export default function OsintTools() {
   // Phone OSINT state
   const [phoneInput, setPhoneInput] = useState('');
   const [phoneResult, setPhoneResult] = useState<PhoneResult | null>(null);
+  const [rawPhoneResult, setRawPhoneResult] = useState<any | null>(null);
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
@@ -103,12 +104,15 @@ export default function OsintTools() {
   const [instaInput, setInstaInput] = useState('');
   const [instaResult, setInstaResult] = useState<InstaResult | null>(null);
   const [instaPostsResult, setInstaPostsResult] = useState<InstaPostsResult | null>(null);
+  const [rawInstaResult, setRawInstaResult] = useState<any | null>(null);
+  const [rawInstaPostsResult, setRawInstaPostsResult] = useState<any | null>(null);
   const [instaLoading, setInstaLoading] = useState(false);
   const [instaError, setInstaError] = useState<string | null>(null);
   
   // Truecaller OSINT state
   const [truecallerInput, setTruecallerInput] = useState('');
   const [truecallerResult, setTruecallerResult] = useState<TruecallerResult | null>(null);
+  const [rawTruecallerResult, setRawTruecallerResult] = useState<any | null>(null);
   const [truecallerLoading, setTruecallerLoading] = useState(false);
   const [truecallerError, setTruecallerError] = useState<string | null>(null);
 
@@ -117,6 +121,7 @@ export default function OsintTools() {
     setPhoneLoading(true);
     setPhoneError(null);
     setPhoneResult(null);
+    setRawPhoneResult(null);
 
     if (!/^\d{10}$/.test(phoneInput)) {
       setPhoneError('Please enter a valid 10-digit phone number.');
@@ -127,14 +132,16 @@ export default function OsintTools() {
     try {
       const response = await fetch(`/api/phone-osint?number=${phoneInput}`);
       const data = await response.json();
+      setRawPhoneResult(data);
       if (!response.ok || data.error) {
         throw new Error(data.error || 'Failed to fetch data from the server.');
       }
        if (data.data && Array.isArray(data.data)) {
         const uniqueData = Array.from(new Set(data.data.map((item: PhoneResultData) => JSON.stringify(item)))).map(item => JSON.parse(item as string));
-        data.data = uniqueData;
+        setPhoneResult({ ...data, data: uniqueData });
+      } else {
+        setPhoneResult(data);
       }
-      setPhoneResult(data);
     } catch (error: any) {
       setPhoneError(error.message || 'An unexpected error occurred.');
     } finally {
@@ -147,6 +154,8 @@ export default function OsintTools() {
     setInstaError(null);
     setInstaResult(null);
     setInstaPostsResult(null);
+    setRawInstaResult(null);
+    setRawInstaPostsResult(null);
     
     const username = instaInput.startsWith('@') ? instaInput.substring(1) : instaInput;
 
@@ -160,6 +169,7 @@ export default function OsintTools() {
       // Fetch profile data
       const profileResponse = await fetch(`/api/insta-osint?username=${username}`);
       const profileData = await profileResponse.json();
+      setRawInstaResult(profileData);
       if (!profileResponse.ok || profileData.error) {
         throw new Error(profileData.error || 'Failed to fetch profile data.');
       }
@@ -168,6 +178,7 @@ export default function OsintTools() {
       // Fetch posts data
       const postsResponse = await fetch(`/api/insta-posts?username=${username}`);
       const postsData = await postsResponse.json();
+      setRawInstaPostsResult(postsData);
       if (!postsResponse.ok || postsData.error) {
         // Don't throw an error, just log it, as posts might not be available
         console.error(postsData.error || 'Failed to fetch posts data.');
@@ -186,6 +197,7 @@ export default function OsintTools() {
     setTruecallerLoading(true);
     setTruecallerError(null);
     setTruecallerResult(null);
+    setRawTruecallerResult(null);
 
     if (!truecallerInput) {
       setTruecallerError('Please enter a phone number.');
@@ -196,7 +208,8 @@ export default function OsintTools() {
     try {
       const response = await fetch(`/api/truecaller-osint?number=${truecallerInput}`);
       const data = await response.json();
-
+      setRawTruecallerResult(data);
+      
       if (!response.ok || data.error) {
         throw new Error(data.error || 'Failed to fetch data from Truecaller service.');
       }
@@ -298,7 +311,7 @@ export default function OsintTools() {
                               <DialogTitle>Raw JSON Response</DialogTitle>
                             </DialogHeader>
                             <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
-                              <code className="text-white">{JSON.stringify(phoneResult, null, 2)}</code>
+                              <code className="text-white">{JSON.stringify(rawPhoneResult, null, 2)}</code>
                             </pre>
                           </DialogContent>
                         </Dialog>
@@ -436,7 +449,7 @@ export default function OsintTools() {
                                 <DialogTitle>Raw JSON Response (Profile & Posts)</DialogTitle>
                               </DialogHeader>
                               <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
-                                <code className="text-white">{JSON.stringify({profile: instaResult, posts: instaPostsResult}, null, 2)}</code>
+                                <code className="text-white">{JSON.stringify({profile: rawInstaResult, posts: rawInstaPostsResult}, null, 2)}</code>
                               </pre>
                             </DialogContent>
                           </Dialog>
@@ -588,7 +601,7 @@ export default function OsintTools() {
                                 <DialogTitle>Raw JSON Response</DialogTitle>
                               </DialogHeader>
                               <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
-                                <code className="text-white">{JSON.stringify(truecallerResult, null, 2)}</code>
+                                <code className="text-white">{JSON.stringify(rawTruecallerResult, null, 2)}</code>
                               </pre>
                             </DialogContent>
                           </Dialog>
@@ -652,5 +665,7 @@ export default function OsintTools() {
     </section>
   );
 }
+
+    
 
     
