@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Phone, UserSearch, MapPin, Lock, Loader2, CheckCircle, UnlockKeyhole, Heart, MessageCircle, User, Map, Home, CircleUser, Wifi, Mail, Briefcase, Building } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, Loader2, CheckCircle, UnlockKeyhole, Heart, MessageCircle, User, Map, Home, CircleUser, Wifi, Mail, Briefcase, Building, Code } from 'lucide-react';
 import CipherTool from './cipher-tool';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 interface PhoneResultData {
   mobile: string;
@@ -286,7 +287,22 @@ export default function OsintTools() {
                   )}
                   {phoneResult && phoneResult.data && (
                      <div className="space-y-4">
-                      <h3 className="text-xl font-bold font-headline mt-4">Scan Results</h3>
+                      <div className='flex justify-between items-center'>
+                        <h3 className="text-xl font-bold font-headline mt-4">Scan Results</h3>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm"><Code className="mr-2 h-4 w-4" /> View JSON</Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-3xl">
+                            <DialogHeader>
+                              <DialogTitle>Raw JSON Response</DialogTitle>
+                            </DialogHeader>
+                            <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+                              <code className="text-white">{JSON.stringify(phoneResult, null, 2)}</code>
+                            </pre>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                         {phoneResult.data.map((record, index) => (
                            <Card key={record.id || index} className="bg-background/50 border-primary/20">
                             <CardContent className="p-4 space-y-3">
@@ -410,6 +426,22 @@ export default function OsintTools() {
                   )}
                   {instaResult && (
                     <div className="space-y-6">
+                      <div className='flex justify-end items-center -mb-4'>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm"><Code className="mr-2 h-4 w-4" /> View JSON</Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-3xl">
+                              <DialogHeader>
+                                <DialogTitle>Raw JSON Response (Profile & Posts)</DialogTitle>
+                              </DialogHeader>
+                              <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+                                <code className="text-white">{JSON.stringify({profile: instaResult, posts: instaPostsResult}, null, 2)}</code>
+                              </pre>
+                            </DialogContent>
+                          </Dialog>
+                      </div>
+
                       <Card className="mt-4 bg-background/50 border-primary/20">
                         <CardContent className="p-6">
                           <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -545,51 +577,68 @@ export default function OsintTools() {
                     </Alert>
                   )}
                   {truecallerResult && truecallerResult.data && (
-                    <Card className="mt-4 bg-background/50 border-primary/20">
-                        <CardContent className="p-6">
-                            <div className="flex flex-col sm:flex-row items-center gap-6">
-                                <Avatar className="h-24 w-24 border-2 border-primary">
-                                    {truecallerResult.data.image ? (
-                                        <AvatarImage src={truecallerResult.data.image} alt={truecallerResult.data.name} />
-                                    ) : null}
-                                    <AvatarFallback>{truecallerResult.data.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 space-y-2 text-center sm:text-left">
-                                    <h3 className="text-2xl font-bold font-headline">{truecallerResult.data.name}</h3>
-                                    {truecallerResult.data.gender && <Badge variant="outline">{truecallerResult.data.gender}</Badge>}
-                                </div>
-                            </div>
-                            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                {truecallerResult.data.phones?.map((phone, i) => (
-                                    <div key={i} className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-full"><Phone className="h-5 w-5 text-primary"/></div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">{phone.carrier}</p>
-                                            <p className="font-semibold">{phone.e164Format}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                                {truecallerResult.data.internetAddresses?.map((email, i) => (
-                                    <div key={i} className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-full"><Mail className="h-5 w-5 text-primary"/></div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">{email.service}</p>
-                                            <p className="font-semibold">{email.id}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                                {truecallerResult.data.addresses?.map((address, i) => (
-                                    <div key={i} className="flex items-center gap-3 col-span-1 sm:col-span-2">
-                                        <div className="bg-primary/10 p-2 rounded-full"><Building className="h-5 w-5 text-primary"/></div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">Address</p>
-                                            <p className="font-semibold">{address.city}, {address.countryCode}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <>
+                      <div className='flex justify-end items-center -mb-2'>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm"><Code className="mr-2 h-4 w-4" /> View JSON</Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-3xl">
+                              <DialogHeader>
+                                <DialogTitle>Raw JSON Response</DialogTitle>
+                              </DialogHeader>
+                              <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+                                <code className="text-white">{JSON.stringify(truecallerResult, null, 2)}</code>
+                              </pre>
+                            </DialogContent>
+                          </Dialog>
+                      </div>
+                      <Card className="mt-4 bg-background/50 border-primary/20">
+                          <CardContent className="p-6">
+                              <div className="flex flex-col sm:flex-row items-center gap-6">
+                                  <Avatar className="h-24 w-24 border-2 border-primary">
+                                      {truecallerResult.data.image ? (
+                                          <AvatarImage src={truecallerResult.data.image} alt={truecallerResult.data.name} />
+                                      ) : null}
+                                      <AvatarFallback>{truecallerResult.data.name.charAt(0)}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 space-y-2 text-center sm:text-left">
+                                      <h3 className="text-2xl font-bold font-headline">{truecallerResult.data.name}</h3>
+                                      {truecallerResult.data.gender && <Badge variant="outline">{truecallerResult.data.gender}</Badge>}
+                                  </div>
+                              </div>
+                              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                  {truecallerResult.data.phones?.map((phone, i) => (
+                                      <div key={i} className="flex items-center gap-3">
+                                          <div className="bg-primary/10 p-2 rounded-full"><Phone className="h-5 w-5 text-primary"/></div>
+                                          <div>
+                                              <p className="text-sm text-muted-foreground">{phone.carrier}</p>
+                                              <p className="font-semibold">{phone.e164Format}</p>
+                                          </div>
+                                      </div>
+                                  ))}
+                                  {truecallerResult.data.internetAddresses?.map((email, i) => (
+                                      <div key={i} className="flex items-center gap-3">
+                                          <div className="bg-primary/10 p-2 rounded-full"><Mail className="h-5 w-5 text-primary"/></div>
+                                          <div>
+                                              <p className="text-sm text-muted-foreground">{email.service}</p>
+                                              <p className="font-semibold">{email.id}</p>
+                                          </div>
+                                      </div>
+                                  ))}
+                                  {truecallerResult.data.addresses?.map((address, i) => (
+                                      <div key={i} className="flex items-center gap-3 col-span-1 sm:col-span-2">
+                                          <div className="bg-primary/10 p-2 rounded-full"><Building className="h-5 w-5 text-primary"/></div>
+                                          <div>
+                                              <p className="text-sm text-muted-foreground">Address</p>
+                                              <p className="font-semibold">{address.city}, {address.countryCode}</p>
+                                          </div>
+                                      </div>
+                                  ))}
+                              </div>
+                          </CardContent>
+                      </Card>
+                    </>
                   )}
                 </CardContent>
               </Card>
