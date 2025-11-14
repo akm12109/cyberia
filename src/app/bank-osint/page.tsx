@@ -16,7 +16,11 @@ interface BinResult {
     Scheme: string;
     Type: string;
     Issuer: string;
-    Country: string;
+    Country: {
+      Name: string;
+      A2: string;
+      A3: string;
+    };
     CountryCode: string;
     Luhn: boolean;
 }
@@ -146,7 +150,7 @@ export default function BankOsintPage() {
                                         <div className="bg-primary/10 p-2 rounded-full"><Globe className="h-5 w-5 text-primary"/></div>
                                         <div>
                                             <p className="text-sm text-muted-foreground">Country</p>
-                                            <p className="font-semibold">{binResult.Country} ({binResult.CountryCode})</p>
+                                            <p className="font-semibold">{binResult.Country.Name} ({binResult.Country.A2})</p>
                                         </div>
                                     </div>
                                     <div className="col-span-1 sm:col-span-2">
