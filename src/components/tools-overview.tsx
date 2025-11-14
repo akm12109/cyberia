@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Phone, UserSearch, MapPin, Lock, PhoneForwarded, Fingerprint } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, PhoneForwarded, Fingerprint, Landmark } from 'lucide-react';
 
 const tools = [
   {
@@ -26,6 +26,12 @@ const tools = [
     description: 'Find family details from an Aadhaar number.',
     href: '/aadhaar-osint',
     icon: <Fingerprint className="h-8 w-8 text-primary" />,
+  },
+  {
+    name: 'Bank OSINT',
+    description: 'Check BIN/IFSC codes for bank details.',
+    href: '/bank-osint',
+    icon: <Landmark className="h-8 w-8 text-primary" />,
   },
   {
     name: 'Postal OSINT',

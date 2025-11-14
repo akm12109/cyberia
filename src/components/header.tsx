@@ -26,6 +26,9 @@ export default function Header() {
              <Link className="transition-colors hover:text-primary" href="/aadhaar-osint">
               Aadhaar
             </Link>
+            <Link className="transition-colors hover:text-primary" href="/bank-osint">
+              Bank
+            </Link>
             <Link className="transition-colors hover:text-primary" href="/#contact">
               Contact
             </Link>

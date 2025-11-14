@@ -16,6 +16,7 @@ const navLinks = [
   { href: '/#news', label: 'Threat Feed' },
   { href: '/#osint', label: 'OSINT' },
   { href: '/aadhaar-osint', label: 'Aadhaar OSINT' },
+  { href: '/bank-osint', label: 'Bank OSINT' },
   { href: '/#contact', label: 'Contact' },
 ];
 
