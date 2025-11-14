@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Phone, UserSearch, MapPin, Lock, PhoneForwarded } from 'lucide-react';
+import { Phone, UserSearch, MapPin, Lock, PhoneForwarded, Fingerprint } from 'lucide-react';
 
 const tools = [
   {
@@ -20,6 +20,12 @@ const tools = [
     description: 'Search the Truecaller database.',
     href: '/truecaller-osint',
     icon: <PhoneForwarded className="h-8 w-8 text-primary" />,
+  },
+  {
+    name: 'Aadhaar OSINT',
+    description: 'Find family details from an Aadhaar number.',
+    href: '/aadhaar-osint',
+    icon: <Fingerprint className="h-8 w-8 text-primary" />,
   },
   {
     name: 'Postal OSINT',
