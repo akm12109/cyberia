@@ -14,19 +14,16 @@ export default function Header() {
             </span>
           </Link>
           <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
-            <Link className="transition-colors hover:text-primary" href="#about">
+            <Link className="transition-colors hover:text-primary" href="/#about">
               Manifesto
             </Link>
-            <Link className="transition-colors hover:text-primary" href="#news">
+            <Link className="transition-colors hover:text-primary" href="/#news">
               Threat Feed
             </Link>
-            <Link className="transition-colors hover:text-primary" href="#osint">
+            <Link className="transition-colors hover:text-primary" href="/#osint">
               OSINT
             </Link>
-             <Link className="transition-colors hover:text-primary" href="#osint">
-              Cipher
-            </Link>
-            <Link className="transition-colors hover:text-primary" href="#contact">
+            <Link className="transition-colors hover:text-primary" href="/#contact">
               Contact
             </Link>
           </nav>

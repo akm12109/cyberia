@@ -12,11 +12,10 @@ import {
 } from '@/components/ui/sheet';
 
 const navLinks = [
-  { href: '#about', label: 'Manifesto' },
-  { href: '#news', label: 'Threat Feed' },
-  { href: '#osint', label: 'OSINT' },
-  { href: '#osint', label: 'Cipher' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/#about', label: 'Manifesto' },
+  { href: '/#news', label: 'Threat Feed' },
+  { href: '/#osint', label: 'OSINT' },
+  { href: '/#contact', label: 'Contact' },
 ];
 
 export function MobileNav() {

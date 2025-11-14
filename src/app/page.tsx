@@ -1,14 +1,20 @@
 import Header from '@/components/header';
-import OsintTools from '@/components/osint-tools';
 import ContactForm from '@/components/contact-form';
 import Footer from '@/components/footer';
+import About from '@/components/about';
+import News from '@/components/news';
+import Hero from '@/components/hero';
+import ToolsOverview from '@/components/tools-overview';
 
 export default function Home() {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <OsintTools />
+        <Hero />
+        <About />
+        <News />
+        <ToolsOverview />
         <div id="contact" className="container mx-auto px-4 py-16 md:py-24 lg:py-32">
           <h2 className="font-headline text-3xl font-bold tracking-tight text-center sm:text-4xl md:text-5xl text-primary">
             Request Trial Access
