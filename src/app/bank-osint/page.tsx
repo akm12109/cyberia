@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import { CreditCard, Landmark, Loader2, Code, Banknote, Calendar, Globe, Building } from 'lucide-react';
+import { CreditCard, Landmark, Loader2, Code, Banknote, Calendar, Globe, Building, Phone, MapPin, CheckCircle, XCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 interface BinResult {
     Scheme: string;
@@ -19,10 +20,25 @@ interface BinResult {
     Country: {
       Name: string;
       A2: string;
-      A3: string;
     };
-    CountryCode: string;
     Luhn: boolean;
+}
+
+interface IfscResult {
+    BANK: string;
+    IFSC: string;
+    BRANCH: string;
+    CENTRE: string;
+    DISTRICT: string;
+    STATE: string;
+    ADDRESS: string;
+    CONTACT: string;
+    UPI: boolean;
+    RTGS: boolean;
+    CITY: string;
+    NEFT: boolean;
+    IMPS: boolean;
+    MICR: string;
 }
 
 export default function BankOsintPage() {
@@ -31,6 +47,13 @@ export default function BankOsintPage() {
     const [rawBinResult, setRawBinResult] = useState<any | null>(null);
     const [binLoading, setBinLoading] = useState(false);
     const [binError, setBinError] = useState<string | null>(null);
+    
+    const [ifscInput, setIfscInput] = useState('');
+    const [ifscResult, setIfscResult] = useState<IfscResult | null>(null);
+    const [rawIfscResult, setRawIfscResult] = useState<any | null>(null);
+    const [ifscLoading, setIfscLoading] = useState(false);
+    const [ifscError, setIfscError] = useState<string | null>(null);
+
 
     const handleBinScan = async () => {
         setBinLoading(true);
@@ -59,6 +82,34 @@ export default function BankOsintPage() {
             setBinLoading(false);
         }
     };
+    
+    const handleIfscScan = async () => {
+        setIfscLoading(true);
+        setIfscError(null);
+        setIfscResult(null);
+        setRawIfscResult(null);
+
+        if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscInput.toUpperCase())) {
+            setIfscError('Please enter a valid 11-character IFSC code.');
+            setIfscLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/ifsc-osint?ifsc=${ifscInput}`);
+            const data = await response.json();
+            setRawIfscResult(data);
+
+            if (!response.ok || data.error) {
+                throw new Error(data.error || 'Failed to fetch IFSC data.');
+            }
+            setIfscResult(data);
+        } catch (error: any) {
+            setIfscError(error.message || 'An unexpected error occurred.');
+        } finally {
+            setIfscLoading(false);
+        }
+    };
 
 
   return (
@@ -71,14 +122,14 @@ export default function BankOsintPage() {
               <Tabs defaultValue="bin" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="bin"><CreditCard className="mr-2 h-4 w-4" /> BIN Checker</TabsTrigger>
-                  <TabsTrigger value="ifsc" disabled><Landmark className="mr-2 h-4 w-4"/> IFSC Finder</TabsTrigger>
+                  <TabsTrigger value="ifsc"><Landmark className="mr-2 h-4 w-4"/> IFSC Finder</TabsTrigger>
                 </TabsList>
                 <TabsContent value="bin">
                   <Card className="border-primary/20">
                     <CardHeader>
                       <CardTitle>BIN Checker</CardTitle>
                       <CardDescription>
-                        Enter a Bank Identification Number (BIN) to get card details.
+                        Enter a Bank Identification Number (the first 6-8 digits of a credit/debit card) to get details about the card.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -115,7 +166,7 @@ export default function BankOsintPage() {
                                     </DialogTrigger>
                                     <DialogContent className="max-w-3xl">
                                     <DialogHeader>
-                                        <DialogTitle>Raw JSON Response</DialogTitle>
+                                        <DialogTitle>Raw JSON Response (BIN)</DialogTitle>
                                     </DialogHeader>
                                     <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
                                         <code className="text-white">{JSON.stringify(rawBinResult, null, 2)}</code>
@@ -166,7 +217,96 @@ export default function BankOsintPage() {
                   </Card>
                 </TabsContent>
                 <TabsContent value="ifsc">
-                  {/* IFSC Finder will be implemented here */}
+                <Card className="border-primary/20">
+                    <CardHeader>
+                      <CardTitle>IFSC Finder</CardTitle>
+                      <CardDescription>
+                        Enter an Indian Financial System Code (IFSC) to get bank branch details.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <Input 
+                          id="ifsc" 
+                          placeholder="e.g., SBIN0000691" 
+                          className="bg-background flex-grow"
+                          value={ifscInput}
+                          onChange={(e) => setIfscInput(e.target.value)}
+                          maxLength={11}
+                        />
+                        <Button onClick={handleIfscScan} disabled={ifscLoading} className="w-full sm:w-auto">
+                          {ifscLoading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Landmark className="mr-2 h-4 w-4" />
+                          )}
+                          Find Branch
+                        </Button>
+                      </div>
+                      {ifscError && (
+                        <Alert variant="destructive">
+                          <AlertTitle>Error</AlertTitle>
+                          <AlertDescription>{ifscError}</AlertDescription>
+                        </Alert>
+                      )}
+                      {ifscResult && (
+                        <div className="space-y-4">
+                            <div className='flex justify-end items-center -mb-2'>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                    <Button variant="outline" size="sm"><Code className="mr-2 h-4 w-4" /> View JSON</Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-3xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Raw JSON Response (IFSC)</DialogTitle>
+                                    </DialogHeader>
+                                    <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+                                        <code className="text-white">{JSON.stringify(rawIfscResult, null, 2)}</code>
+                                    </pre>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                            <Card className="bg-background/50 border-primary/20">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center text-primary"><Landmark className="mr-3"/> {ifscResult.BANK}</CardTitle>
+                                    <CardDescription>{ifscResult.BRANCH} Branch</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-3 text-sm">
+                                    <div className="flex items-start gap-3">
+                                        <MapPin className="h-4 w-4 mt-1 text-primary"/>
+                                        <p className="font-semibold">{ifscResult.ADDRESS}, {ifscResult.CITY}, {ifscResult.STATE} - {ifscResult.DISTRICT}</p>
+                                    </div>
+                                    {ifscResult.CONTACT && (
+                                    <div className="flex items-center gap-3">
+                                        <Phone className="h-4 w-4 text-primary"/>
+                                        <p className="font-semibold">{ifscResult.CONTACT}</p>
+                                    </div>
+                                    )}
+                                    <Separator/>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            {ifscResult.UPI ? <CheckCircle className="h-6 w-6 text-green-500"/> : <XCircle className="h-6 w-6 text-red-500"/>}
+                                            <span className="text-xs font-medium">UPI</span>
+                                        </div>
+                                         <div className="flex flex-col items-center gap-1">
+                                            {ifscResult.IMPS ? <CheckCircle className="h-6 w-6 text-green-500"/> : <XCircle className="h-6 w-6 text-red-500"/>}
+                                            <span className="text-xs font-medium">IMPS</span>
+                                        </div>
+                                         <div className="flex flex-col items-center gap-1">
+                                            {ifscResult.NEFT ? <CheckCircle className="h-6 w-6 text-green-500"/> : <XCircle className="h-6 w-6 text-red-500"/>}
+                                            <span className="text-xs font-medium">NEFT</span>
+                                        </div>
+                                         <div className="flex flex-col items-center gap-1">
+                                            {ifscResult.RTGS ? <CheckCircle className="h-6 w-6 text-green-500"/> : <XCircle className="h-6 w-6 text-red-500"/>}
+                                            <span className="text-xs font-medium">RTGS</span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
             </div>
