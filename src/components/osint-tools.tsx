@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 interface PhoneResultData {
   mobile: string;
@@ -243,28 +244,31 @@ export default function OsintTools() {
         </div>
         <div className="mx-auto mt-12 max-w-4xl">
           <Tabs defaultValue="phone-osint" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="phone-osint">
-                <Phone className="mr-2 h-4 w-4" />
-                Phone OSINT
-              </TabsTrigger>
-              <TabsTrigger value="insta-osint">
-                <UserSearch className="mr-2 h-4 w-4" />
-                Insta OSINT
-              </TabsTrigger>
-              <TabsTrigger value="postal-osint">
-                <MapPin className="mr-2 h-4 w-4" />
-                Postal OSINT
-              </TabsTrigger>
-              <TabsTrigger value="truecaller-osint">
-                <Phone className="mr-2 h-4 w-4" />
-                Truecaller OSINT
-              </TabsTrigger>
-              <TabsTrigger value="cipher">
-                <Lock className="mr-2 h-4 w-4" />
-                Cipher
-              </TabsTrigger>
-            </TabsList>
+             <ScrollArea className="w-full">
+              <TabsList className="grid w-full grid-cols-5 min-w-[600px]">
+                <TabsTrigger value="phone-osint">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Phone OSINT
+                </TabsTrigger>
+                <TabsTrigger value="insta-osint">
+                  <UserSearch className="mr-2 h-4 w-4" />
+                  Insta OSINT
+                </TabsTrigger>
+                <TabsTrigger value="postal-osint">
+                  <MapPin className="mr-2 h-4 w-4" />
+                  Postal OSINT
+                </TabsTrigger>
+                <TabsTrigger value="truecaller-osint">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Truecaller OSINT
+                </TabsTrigger>
+                <TabsTrigger value="cipher">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Cipher
+                </TabsTrigger>
+              </TabsList>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
             <TabsContent value="phone-osint">
               <Card className="border-primary/20">
                 <CardHeader>
@@ -274,16 +278,16 @@ export default function OsintTools() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <Input 
                       id="phone" 
                       placeholder="e.g., 9876543210" 
-                      className="bg-background"
+                      className="bg-background flex-grow"
                       value={phoneInput}
                       onChange={(e) => setPhoneInput(e.target.value)}
                       maxLength={10}
                     />
-                    <Button onClick={handlePhoneScan} disabled={phoneLoading}>
+                    <Button onClick={handlePhoneScan} disabled={phoneLoading} className="w-full sm:w-auto">
                       {phoneLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
@@ -414,15 +418,15 @@ export default function OsintTools() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <Input 
                       id="insta-profile" 
                       placeholder="username (without @)" 
-                      className="bg-background"
+                      className="bg-background flex-grow"
                       value={instaInput}
                       onChange={(e) => setInstaInput(e.target.value)}
                     />
-                     <Button onClick={handleInstaScan} disabled={instaLoading}>
+                     <Button onClick={handleInstaScan} disabled={instaLoading} className="w-full sm:w-auto">
                       {instaLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
@@ -566,15 +570,15 @@ export default function OsintTools() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <Input
                       id="truecaller-phone"
                       placeholder="e.g., +919876543210"
-                      className="bg-background"
+                      className="bg-background flex-grow"
                       value={truecallerInput}
                       onChange={(e) => setTruecallerInput(e.target.value)}
                     />
-                    <Button onClick={handleTruecallerScan} disabled={truecallerLoading}>
+                    <Button onClick={handleTruecallerScan} disabled={truecallerLoading} className="w-full sm:w-auto">
                       {truecallerLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
